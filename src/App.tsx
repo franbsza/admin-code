@@ -24,7 +24,7 @@ function App(){
       component="main" 
       sx={{ 
         height: '100vh',
-        backgroundColor: '#f5f5f1', 
+        backgroundColor: (theme) => theme.palette.background.default, 
          }}>
 
       <Header />

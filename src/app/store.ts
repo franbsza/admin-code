@@ -13,10 +13,9 @@ export const store =  configureStore({
         [categoriesApiSlice.reducerPath]: apiSlice.reducer,
     },
     middleware: (getDefaultMiddleware) => {
-        console.log('IN MIDDLEWARE'); // gets logged in tests, so jests gets to this point
         return getDefaultMiddleware({
           serializableCheck: false, // works in the app, but doesn't in tests - I still see the error log there
-        });
+        }).concat(apiSlice.middleware);
       }
 })
 

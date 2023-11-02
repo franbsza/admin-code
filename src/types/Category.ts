@@ -1,4 +1,4 @@
-export interface Results {
+export interface CategoryResponse {
     meta: Meta;
     links: Links;
     data: Category[];
@@ -13,10 +13,10 @@ export interface Results {
   export interface Category {
     id: string;
     name: string;
-    deleted_at: string;
-    is_active: boolean;
-    created_at: string;
-    updated_at: string;
+    deletedAt: null | Date;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
     description: null | string;
   }
   

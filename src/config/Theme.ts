@@ -1,10 +1,16 @@
 import { createTheme } from '@mui/material';
+import { lime, purple } from '@mui/material/colors';
 
 export const appTheme = createTheme({
     palette: {
-        mode: 'light',
-        primary: { main: "#000" },
+        mode: 'dark',
+        primary: { 
+            main: purple[500],
+            light: '#42a5f5',
+            dark: '#1565c0',
+            contrastText: '#fff',
+        },
         secondary: { main: "#b81414" },
-        text: { primary : "#141313" }
+        text: { primary : "#fff" }
     },
 });

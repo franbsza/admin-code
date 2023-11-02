@@ -1,22 +1,23 @@
 import { Box, Typography, Paper} from '@mui/material';
 import { CategoryForm } from './components/CategoryForm';
-import { useState } from 'react';
-import { useAppDispatch } from '../../app/hooks';
-import { Category , createCategory} from '../categories/Slice';
+import { useEffect, useState } from 'react';
+import { useCreateCategoryMutation} from '../categories/Slice';
+import { Category } from '../../types/Category';
+import { useSnackbar } from 'notistack';
 
 export const CreateCategory = () => {
-
+  const { enqueueSnackbar } = useSnackbar();
+  const [createCategory, status] = useCreateCategoryMutation();
   const [isDisabled, setIsDisabled] = useState(false);
   const [categoryState, setCategoryState] = useState<Category>({
     id: "",
     name: "",
     description: "",
-    is_active: false,
-    deleted_at: null,
-    created_at: new Date(),
-    updated_at: new Date(),
+    isActive: false,
+    deletedAt: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
-  const dispatch = useAppDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -30,10 +31,20 @@ export const CreateCategory = () => {
     console.log(name, checked);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault();
-    dispatch(createCategory(categoryState));
+    await createCategory(categoryState);
   };
+
+  useEffect(() => {
+    if(status.isSuccess){
+      enqueueSnackbar("Category created successfully", { variant: "success" });
+      setIsDisabled(true);
+    }
+    if(status.error){
+      enqueueSnackbar("Category not created", { variant: "error" });
+    }
+  }, [enqueueSnackbar, status.isSuccess, status.error]);
 
     return (
 
@@ -51,7 +62,6 @@ export const CreateCategory = () => {
           hadleChange={handleChange}
           handleToggle={handleToggle}
           />
-
         </Paper>
       </Box>
    );

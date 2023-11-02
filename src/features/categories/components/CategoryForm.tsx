@@ -1,15 +1,15 @@
 import {
-    Box,
-    Button,
-    FormControl,
-    FormControlLabel,
-    FormGroup,
-    Grid,
-    Switch,
-    TextField
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  Switch,
+  TextField
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { Category } from '../../categories/Slice';
+import { Category } from '../../../types/Category';
 
 type Props = {
     category: Category;
@@ -58,20 +58,23 @@ export function CategoryForm({
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormGroup>
-                    <FormControlLabel 
+                <FormGroup>
+                  <FormControlLabel
                     control={
-                      <Switch name="is_active"
-                      color="secondary"
-                      onChange={handleToggle}
-                      checked={category.is_active}
-                      inputProps={{ 'aria-label': 'controlled' }}
+                      <Switch
+                        name="isActive"
+                        color="secondary"
+                        onChange={handleToggle}
+                        checked={category.isActive || false}
+                        inputProps={{ "aria-label": "controlled" }}
+                        data-testid="isActive"
+                        disabled={isDisabled}
                       />
                     }
                     label="Active"
-                    />
-                  </FormGroup>
-                </Grid>
+                  />
+                </FormGroup>
+              </Grid>
 
                 <Grid item xs={12}>
                   <Box display="flex" gap={2}>
@@ -91,7 +94,7 @@ export function CategoryForm({
                     color="secondary"
                     disabled={isDisabled}
                     >
-                      Save
+                      {isLoading ? "Loading..." : "Save"}
                     </Button>
                   </Box>
                 </Grid>

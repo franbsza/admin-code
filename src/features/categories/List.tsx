@@ -1,110 +1,67 @@
-import { Box, Button, IconButton, Typography } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
+import { Box, Button, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectCategories, deleteCategory } from '../categories/Slice';
-import { 
-  DataGrid , 
-  GridRowsProp, 
-  GridColDef, 
-  GridRenderCellParams,
-  GridToolbar
-} from '@mui/x-data-grid';
+import { useDeleteCategoryMutation, useGetCategoriesQuery } from '../categories/Slice';
+
+import { GridFilterModel } from '@mui/x-data-grid';
+import { enqueueSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
+import { CategoryTable } from './components/CategoryTable';
 
 export const CategoryList = () => {
 
-const categories = useAppSelector(selectCategories);
-const dispatch = useAppDispatch();
+const [page, setPage] = useState(0);
+const [perPage, setPerPage] = useState(10);
+const [search] = useState(""); 
+const [rowsPerPage] = useState([10, 25, 50, 100])
 
-const rows: GridRowsProp = categories.map((category) => ({
-    id: category.id,
-    name: category.name,
-    description: category.description,
-    isActive: category.is_active,
-    createdAt: new Date(category.created_at).toLocaleDateString("pt-BR") ,
-}));
+const [options, setOptions] = useState({
+  page: page,
+  search: search,
+  perPage: perPage,
+  rowsPerPage: rowsPerPage,
+});
 
-const columns: GridColDef[] = [
-  { 
-    field: "id", 
-    headerName: "ID", 
-    flex: 1 
-  },
-  { 
-    field: "name", 
-    headerName: "Name", 
-    flex: 1 
-  },
-  { 
-    field: "description", 
-    headerName: "Description", 
-    flex: 1 
-  },
-  { 
-    field: "createdAt", 
-    headerName: "Created At", 
-    flex: 1 
-  },
-  { 
-    field: "isActive", 
-    headerName: "Active", 
-    flex: 1,
-    type: "boolean",
-    renderCell: renderIsActiveCell
-  },
-  { 
-    field: "deleteAction", 
-    headerName: "Delete", 
-    type: "string",
-    flex: 1 ,
-    renderCell: renderDeleteActionCell
-  },
-  { 
-    field: "editAction", 
-    headerName: "Edit", 
-    flex: 1 ,
-    renderCell: renderEditActionCell
+const { data, error , isFetching} = useGetCategoriesQuery(options);
+const [deleteCategory, { error: deleteError, isSuccess: deleteSuccess }] =
+useDeleteCategoryMutation();
+
+function handleOnPageChange(page: number) {
+  setPage(page+1);
+  setOptions({ ...options, page: page});
+}
+
+function handleOnPageSizeChange(perPage: number) {
+  setPerPage(perPage);
+  setOptions({ ...options, perPage: perPage});
+}
+
+function handleFilterChange(filterModel: GridFilterModel) {
+  if (!filterModel.quickFilterValues?.length) {
+    return setOptions({ ...options, search: "" });
   }
-];
 
-function renderDeleteActionCell(rowData: GridRenderCellParams) {
-
-  console.log(rowData);
-
-  return (
-    <IconButton
-    color="secondary"
-    onClick={() => deleteCategoryById(rowData.row.id)}
-    aria-label="delete">
-      <DeleteIcon />
-    </IconButton>
-  )
+  const search = filterModel.quickFilterValues.join("");
+  setOptions({ ...options, search });
 }
 
-function renderEditActionCell(rowData: GridRenderCellParams) {
-
-return (
-<Link to={`/categories/edit/${rowData.id}`} 
-style={{ textDecoration: "none" }}
->
-    <IconButton>
-      <BorderColorIcon color='primary'/>
-    </IconButton>
-    </Link>
-)
+async function handleDeleteCategory(id: string) {
+  await deleteCategory({ id });
 }
 
-function renderIsActiveCell(rowData: GridRenderCellParams) {
-  return (
-    <Typography color={rowData.value ? "primary" : "secondary"}>
-      {rowData.value ? "Yes" : "No"}
-    </Typography>
-  )
-}
+useEffect(() => {
+  if (deleteSuccess) {
+    enqueueSnackbar(`Category deleted`, { variant: "success" });
+  }
+  if (deleteError) {
+    enqueueSnackbar(`Category not deleted`, { variant: "error" });
+  }
+  if(error) {
+    enqueueSnackbar(`Error deleting category`, { variant: "error"});
+  }
+}, [deleteSuccess, deleteError, enqueueSnackbar]);
 
-function deleteCategoryById(id: string) {
-  dispatch(deleteCategory(id));
+if (error) {
+  return <Typography>Error fetching categories</Typography>;
 }
 
     return (
@@ -122,20 +79,16 @@ function deleteCategoryById(id: string) {
           </Button>
         </Box>
 
-        <Box sx={{ display: 'flex', height: 500, width: '100%' }}>
-          <DataGrid 
-          components={{ 
-            Toolbar: GridToolbar
-          }}
-          componentsProps={{
-            toolbar: {
-              showQuickFilter: true,
-              quickFilterProps: { debounceMs: 500 },
-            },
-          }}
-          pageSizeOptions={[2, 10, 100]}
-          rows={rows} columns={columns} />
-        </Box>
+        <CategoryTable
+        data={data}
+        isFetching={isFetching}
+        perPage={options.perPage}
+        rowsPerPage={options.rowsPerPage}
+        handleDelete={handleDeleteCategory}
+        handleOnPageChange={handleOnPageChange}
+        handleOnPageSizeChange={handleOnPageSizeChange}
+        handleFilterChange={handleFilterChange}
+      />
       </Box>
     );
   }

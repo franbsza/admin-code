@@ -6,5 +6,13 @@ export const apiSlice = createApi({
     reducerPath: "api",
     tagTypes: [ "Categories"],
     endpoints: (builder) => ({}),
-    baseQuery: fetchBaseQuery({ baseUrl: baseUrl }),
+    baseQuery: fetchBaseQuery({ 
+        baseUrl: baseUrl ,
+        prepareHeaders: (headers, { getState }) => {
+            headers.set('Content-Type', 'application/json');
+            headers.set('Accept', 'application/json');
+            headers.set('Access-Control-Allow-Origin', '*');
+            return headers
+        }
+    })
 });
