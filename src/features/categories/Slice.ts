@@ -4,22 +4,22 @@ import { Category, CategoryParams, CategoryResponse } from '../../types/Category
 import { apiSlice } from '../api/apiSlice';
 
 
-const category: Category = {
-    id: "1",
-    name: 'Category 1',
-    description: 'Category 1 Description',
-    isActive: false,
-    deletedAt: null,
-    createdAt: new Date(),
-    updatedAt: new Date()
-}
+// const category: Category = {
+//     id: "1",
+//     name: 'Category 1',
+//     description: 'Category 1 Description',
+//     isActive: false,
+//     deletedAt: null,
+//     createdAt: new Date(),
+//     updatedAt: new Date()
+// }
 
-export const initialState = [
-    category,
-    { ...category, id: "2", name: 'Category 1', description: 'Category 1 Description' },
-    { ...category, id: "3", name: 'Category 2', description: 'Category 2 Description' },
-    { ...category, id: "4", name: 'Category 3', description: 'Category 3 Description' },
-]
+// export const initialState = [
+//     category,
+//     { ...category, id: "2", name: 'Category 1', description: 'Category 1 Description' },
+//     { ...category, id: "3", name: 'Category 2', description: 'Category 2 Description' },
+//     { ...category, id: "4", name: 'Category 3', description: 'Category 3 Description' },
+// ]
 
 
 const endpointUrl = "/categories";
@@ -100,41 +100,41 @@ export const categoriesApiSlice = apiSlice.injectEndpoints({
 }); 
 
 
-const categoriesSlice = createSlice({
-    name: 'categories',
-    initialState: initialState,
-    reducers: {
-        createCategory(state, action) {
-            state.push(action.payload);
-        },
-        updateCategory(state, action) {
-            const index = state.findIndex((category) => category.id === action.payload.id);
-            state[index] = action.payload;
-        },
-        deleteCategory(state, action) {
-            const index = state.findIndex((category) => category.id === action.payload);
-            state.splice(index, 1);
-        },
-    }
-});
+// const categoriesSlice = createSlice({
+//     name: 'categories',
+//     initialState: initialState,
+//     reducers: {
+//         createCategory(state, action) {
+//             state.push(action.payload);
+//         },
+//         updateCategory(state, action) {
+//             const index = state.findIndex((category) => category.id === action.payload.id);
+//             state[index] = action.payload;
+//         },
+//         deleteCategory(state, action) {
+//             const index = state.findIndex((category) => category.id === action.payload);
+//             state.splice(index, 1);
+//         },
+//     }
+// });
 
-export const selectCategories = (state: RootState) => state.categories
+//export const selectCategories = (state: RootState) => state.categories
 
-export const selectCategoryById = (state: RootState, id: String) => {
-    const category = state.categories.find((category) => category.id === id);
-    return category || {
-        id: "",
-        name: "",
-        description: "",
-        isActive: false,
-        deletedAt: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    };
-}
+// export const selectCategoryById = (state: RootState, id: String) => {
+//     const category = state.categories.find((category) => category.id === id);
+//     return category || {
+//         id: "",
+//         name: "",
+//         description: "",
+//         isActive: false,
+//         deletedAt: null,
+//         createdAt: new Date(),
+//         updatedAt: new Date(),
+//     };
+// }
 
-export default categoriesSlice.reducer;
-export const { createCategory, updateCategory, deleteCategory } = categoriesSlice.actions
+// export default categoriesSlice.reducer;
+// export const { createCategory, updateCategory, deleteCategory } = categoriesSlice.actions
 export const {
     useGetCategoriesQuery,
     useCreateCategoryMutation,

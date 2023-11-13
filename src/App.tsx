@@ -9,9 +9,12 @@ import { CategoryList } from './features/categories/List';
 import { CreateCategory } from './features/categories/Create';
 import { EditCategory } from './features/categories/Edit';
 import { SnackbarProvider } from 'notistack'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 function App(){
   return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
     <ThemeProvider theme={ appTheme }>
       <SnackbarProvider 
           maxSnack={3}
@@ -46,6 +49,7 @@ function App(){
       </Box>
       </SnackbarProvider>
     </ThemeProvider>
+    </LocalizationProvider>
   );
 }
 

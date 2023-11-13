@@ -18,6 +18,7 @@ export interface CategoryResponse {
     createdAt: Date;
     updatedAt: Date;
     description: null | string;
+    rate: number;
   }
   
   export interface Links {

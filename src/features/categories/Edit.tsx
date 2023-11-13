@@ -7,6 +7,8 @@ import {
   import { useGetCategoryQuery, useUpdateCategoryMutation} from '../categories/Slice';
   import { useSnackbar } from 'notistack'
 import { Category } from '../../types/Category';
+import { DatePicker, DateValidationError, PickerChangeHandlerContext,  } from '@mui/x-date-pickers';
+import { UsePickerValueBaseProps } from '@mui/x-date-pickers/internals/hooks/usePicker/usePickerValue.types';
  
 export const EditCategory = () => {
 
@@ -22,6 +24,7 @@ export const EditCategory = () => {
     updatedAt: new Date(),
     deletedAt: new Date(),
     description: "",
+    rate: 0
   });
 
   const { enqueueSnackbar } = useSnackbar();
@@ -42,6 +45,12 @@ export const EditCategory = () => {
     e.preventDefault();
     setIsDisabled(true);
     updateCategory(categoryState);
+  };
+
+  const handleDatePickerChange = (value: Date | null) => {
+    // const { name, value } = e.target;
+    // setCategoryState({ ...categoryState, [name]: value });
+    console.log(value);
   };
 
   useEffect(() => {
@@ -75,6 +84,8 @@ export const EditCategory = () => {
           handleSubmit={handleSubmit}
           hadleChange={handleChange}
           handleToggle={handleToggle}
+          hadleSelectChange={(event) => console.log(event)}
+          handleDatePickerChange={handleDatePickerChange}
           />
          
         </Paper>

@@ -1,9 +1,12 @@
-import { Box, Typography, Paper} from '@mui/material';
+import { Box, Typography, Paper, SelectChangeEvent} from '@mui/material';
 import { CategoryForm } from './components/CategoryForm';
 import { useEffect, useState } from 'react';
 import { useCreateCategoryMutation} from '../categories/Slice';
 import { Category } from '../../types/Category';
 import { useSnackbar } from 'notistack';
+import { DatePicker, DateValidationError, PickerChangeHandlerContext,  } from '@mui/x-date-pickers';
+import { UsePickerValueBaseProps } from '@mui/x-date-pickers/internals/hooks/usePicker/usePickerValue.types';
+
 
 export const CreateCategory = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -17,6 +20,7 @@ export const CreateCategory = () => {
     deletedAt: null,
     createdAt: new Date(),
     updatedAt: new Date(),
+    rate: 1
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +33,18 @@ export const CreateCategory = () => {
     const { name, checked } = e.target;
     setCategoryState({ ...categoryState, [name]: checked });
     console.log(name, checked);
+  };
+
+  const hadleSelectChange = (e: SelectChangeEvent<Number>) => {
+    const { name, value } = e.target;
+    setCategoryState({ ...categoryState, [name]: value });
+    console.log(name, value);
+  };
+
+  const handleDatePickerChange = (value: Date | null) => {
+    const data =  value || new Date();
+    setCategoryState({ ...categoryState, updatedAt: data });
+    console.log(value);
   };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
@@ -61,6 +77,8 @@ export const CreateCategory = () => {
           handleSubmit={handleSubmit}
           hadleChange={handleChange}
           handleToggle={handleToggle}
+          hadleSelectChange={hadleSelectChange}
+          handleDatePickerChange={handleDatePickerChange}
           />
         </Paper>
       </Box>

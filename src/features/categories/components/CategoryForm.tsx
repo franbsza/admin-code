@@ -5,11 +5,19 @@ import {
   FormControlLabel,
   FormGroup,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   Switch,
   TextField
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Category } from '../../../types/Category';
+import { DatePicker, DateValidationError, PickerChangeHandlerContext,  } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
+import { PickerSelectionState, UsePickerValueBaseProps } from '@mui/x-date-pickers/internals/hooks/usePicker/usePickerValue.types';
+
 
 type Props = {
     category: Category;
@@ -18,6 +26,8 @@ type Props = {
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     hadleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleToggle: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    hadleSelectChange: (e: SelectChangeEvent<Number>) => void;
+    handleDatePickerChange : (value: Date | null) => void;
 }
 
 export function CategoryForm({
@@ -26,13 +36,40 @@ export function CategoryForm({
     isLoading = false,
     handleSubmit,
     hadleChange,
-    handleToggle
+    handleToggle,
+    hadleSelectChange,
+    handleDatePickerChange
 }: Props) {
 
     return (
         <Box>
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
+
+                <Grid>
+                  <DatePicker 
+                  
+                  onChange={handleDatePickerChange}
+                  />
+                </Grid>
+
+                <Grid>
+                <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  name="rate"
+                  defaultValue={10}
+                  value={category.rate} 
+                  label="Age"
+                  onChange={hadleSelectChange}
+                >
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+
+                </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth>
                       <TextField 
